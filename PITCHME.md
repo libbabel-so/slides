@@ -131,11 +131,11 @@ style: |
 
 # Before We Start
 
-- These slides are hosted at `cerealsoup.local`
+- These slides are hosted at `cerealsoup.libbabel.so`
 
-- All `cerealsoup.local:PORT` links are *only* accessible through our router 
+- All `cerealsoup.libbabel.so` links are *only* accessible on LAN (DNS magic) 
 
-> Ask me if you're interested to know why ( ´ ▽ ` ).｡ｏ♡
+> Ask me if you're interested to know how ( ´ ▽ ` ).｡ｏ♡
 
 
 
@@ -423,7 +423,7 @@ A grave sin. A cover up. A forgotten crossroad.
 <div class="centerdiv">
 
 ```
-cerealsoup.local:5000
+cerealsoup.libbabel.so:5000
 ```
 
 </div>
@@ -470,7 +470,7 @@ The ghosts have hidden themselves using mysterious hexes. Think you can find the
 <div class="centerdiv">
 
 ```
-cerealsoup.local:3000
+cerealsoup.libbabel.so:3000
 ```
 
 </div>
