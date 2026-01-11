@@ -135,7 +135,7 @@ style: |
 
 - All `cerealsoup.local:PORT` links are *only* accessible through our router 
 
-> Ask me if you're interested why ( ´ ▽ ` ).｡ｏ♡
+> Ask me if you're interested to know why ( ´ ▽ ` ).｡ｏ♡
 
 
 
@@ -344,18 +344,21 @@ X-Firefox-Spdy: h2
 # Client-side Web is Open 
   - Browser Dev Tools leak all client-side logic
   - JS can be _obfuscated_ but not _hidden_ 
-  - WASM binaries can be reverse-engineered.
+  - WASM binaries can be reverse-engineered
 
-> (╭ರ_•́) The internet is broken beyond repair
+> (╭ರ_•́) Never trust the client
 
 ---
 
-# Fingerprinting Methods
+# Reconnaissance & Fingerprinting
 
-- Sniff info about the running services, versions, tech stack, etc.
-- Use this info to pinpoint vulnerabilities and attack vectors.
+- Sniff info about the running services, versions & tech stack
 
-![center w:700](./assets/finger.jpg)
+- Use this info to pinpoint vulnerabilities and attack vectors
+
+- `cve.org` tracks known security bugs
+
+![bg fit opacity:0.1](./assets/shockdart.png)
 
 ---
 
@@ -368,6 +371,24 @@ X-Firefox-Spdy: h2
 
 
 ![bg right:40%](./assets/port.jpg)
+
+---
+
+### `nmap` Cheat Sheet
+
+```bash
+# Ping scan (host discovery)
+nmap -sn target
+
+# TCP SYN scan (stealth)
+nmap -sT target
+
+# Scan all ports
+nmap -p- target
+
+# Aggressive scan (service & OS detection)
+nmap -A target
+```
 
 --- 
 
@@ -385,6 +406,10 @@ X-Firefox-Spdy: h2
   - Exposed `.git/` directories
   - Can lead to total reconstruction of the git commit history
   - Automated using tools like `git-dumper`
+
+```bash
+git-dumper http://website.com/.git ~/dump
+```
 
 > (╭ರ_•́) How bad do you think this is?
 
@@ -493,21 +518,14 @@ document.getElementById('name').innerHTML = name;
 
 Other common ways of executing XSS:
 
-- Through inline scripts 
-
 ```html
+<!-- Inline event handlers --> 
 <img src=X onerror="alert(1)" />
-```
 
-- Using `javascript:` URL scheme
-
-```html
+<!-- javascript: URL scheme -->
 <a href="javascript:alert(1)">Click me</a>
-```
 
-- `data:` URI XSS
-
-```html
+<!-- data: URI XSS -->
 <script src="data:text/javascript,alert(1)"></script>
 ```
 
@@ -523,7 +541,7 @@ Other common ways of executing XSS:
 ###### Example 
 
 ```http
-Content-Security-Policy: default-src 'self'; img-src 'self' example.com
+Content-Security-Policy: default-src 'self'; script-src 'self' example.com
 ```
 
 ---
@@ -611,9 +629,11 @@ Bun.serve({
 
 ---
 
-# pwn.college 
+# XSS challenges 
 
-- XSS challenges from pwn.college
+- [XSS Games](https://xss-game.appspot.com)
+
+- [pwn.college](https://pwn.college/intro-to-cybersecurity/web-security/)
 
 
 ---
